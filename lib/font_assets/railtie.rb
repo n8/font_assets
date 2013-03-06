@@ -9,6 +9,6 @@ module FontAssets
       config.font_assets.options ||= { allow_ssl: true }
 
       app.middleware.insert_before 'ActionDispatch::Static', FontAssets::Middleware, config.font_assets.origin, config.font_assets.options
-    
+    end
   end
 end
