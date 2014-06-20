@@ -24,7 +24,12 @@ module FontAssets
       @ssl_request = Rack::Request.new(env).scheme == "https"
       # intercept the "preflight" request
       if env["REQUEST_METHOD"] == "OPTIONS"
-        return [200, access_control_headers, []]
+        if ext = extension(env["PATH_INFO"]) and font_asset?(ext)
+          return [200, access_control_headers, []]
+        else
+          code, headers, body = @app.call(env)
+          [code, headers, body]
+        end
       else
         code, headers, body = @app.call(env)
         set_headers! headers, body, env["PATH_INFO"]
